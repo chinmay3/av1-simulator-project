@@ -14,9 +14,10 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 
 BASE_DIR = os.getcwd()
 OUTPUT_DIR = "/tmp" if os.getenv("VERCEL") else BASE_DIR
+INPUT_DIR = OUTPUT_DIR
 
 CONFIG = {
-    "input_yuv": os.path.join(BASE_DIR, "input.yuv"),
+    "input_yuv": os.path.join(INPUT_DIR, "input.yuv"),
     "input_yuv_url": "https://pub-626a26b06170405fb665c942a12d0972.r2.dev/input.yuv",
     "yuv_width": 352,
     "yuv_height": 288,
