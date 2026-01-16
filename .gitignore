@@ -4,12 +4,13 @@ __pycache__/
 .DS_Store
 *.mp4
 *.yuv
+!input.yuv
 *.av1s
 *.json
+!vercel.json
 ops/
 tmp_qp_*.av1s
 output.av1s
 decoded.mp4
 input.mp4
-input.yuv
 grain.json
