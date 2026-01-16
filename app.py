@@ -2,6 +2,7 @@ import os
 import threading
 import time
 
+import numpy as np
 from flask import Flask, jsonify, redirect, render_template, request, send_file, url_for
 
 from av1sim.codec import decode_video, encode_video
@@ -10,13 +11,17 @@ from av1sim.io import read_yuv420_frames
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
+BASE_DIR = os.getcwd()
+OUTPUT_DIR = "/tmp" if os.getenv("VERCEL") else BASE_DIR
+
 CONFIG = {
-    "input_yuv": os.path.join(os.getcwd(), "input.yuv"),
+    "input_yuv": os.path.join(BASE_DIR, "input.yuv"),
     "yuv_width": 352,
     "yuv_height": 288,
     "yuv_fps": 30.0,
-    "output_av1s": os.path.join(os.getcwd(), "output.av1s"),
-    "output_mp4": os.path.join(os.getcwd(), "decoded.mp4"),
+    "yuv_frames": 60,
+    "output_av1s": os.path.join(OUTPUT_DIR, "output.av1s"),
+    "output_mp4": os.path.join(OUTPUT_DIR, "decoded.mp4"),
     "block": 8,
     "qp": 20,
     "search": 8,
@@ -50,9 +55,7 @@ def _run_compress():
     with LOCK:
         JOBS["compress"].update({"state": "running", "started": time.time(), "error": "", "output": 0})
     try:
-        frames = read_yuv420_frames(
-            CONFIG["input_yuv"], CONFIG["yuv_width"], CONFIG["yuv_height"]
-        )
+        frames = _load_frames()
         encode_video(
             frames,
             CONFIG["yuv_fps"],
@@ -100,10 +103,11 @@ def landing():
 
 @app.route("/db")
 def db():
-    yuv_size = _file_size(CONFIG["input_yuv"])
+    yuv_size = _source_size()
+    yuv_name = os.path.basename(CONFIG["input_yuv"]) if os.path.exists(CONFIG["input_yuv"]) else "sample.yuv"
     return render_template(
         "db.html",
-        yuv_name=os.path.basename(CONFIG["input_yuv"]),
+        yuv_name=yuv_name,
         yuv_size=_human_size(yuv_size),
     )
 
@@ -164,6 +168,32 @@ def media_decoded():
     if not os.path.exists(CONFIG["output_mp4"]):
         return "", 404
     return send_file(CONFIG["output_mp4"], mimetype="video/mp4")
+
+
+def _load_frames():
+    if os.path.exists(CONFIG["input_yuv"]):
+        return read_yuv420_frames(
+            CONFIG["input_yuv"], CONFIG["yuv_width"], CONFIG["yuv_height"]
+        )
+    return _generate_frames(CONFIG["yuv_frames"], CONFIG["yuv_width"], CONFIG["yuv_height"])
+
+
+def _source_size():
+    if os.path.exists(CONFIG["input_yuv"]):
+        return _file_size(CONFIG["input_yuv"])
+    return int(CONFIG["yuv_frames"] * CONFIG["yuv_width"] * CONFIG["yuv_height"] * 3 // 2)
+
+
+def _generate_frames(count, width, height):
+    frames = []
+    for i in range(count):
+        x = np.linspace(0, 255, width, dtype=np.float32)
+        y = np.linspace(0, 255, height, dtype=np.float32)
+        xv, yv = np.meshgrid(x, y)
+        base = (xv * 0.6 + yv * 0.4 + (i * 3) % 255) % 255
+        bgr = np.stack([base, np.roll(base, i % width, axis=1), np.flipud(base)], axis=2)
+        frames.append(bgr.astype(np.uint8))
+    return frames
 
 
 if __name__ == "__main__":

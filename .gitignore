@@ -4,7 +4,6 @@ __pycache__/
 .DS_Store
 *.mp4
 *.yuv
-!input.yuv
 *.av1s
 *.json
 !vercel.json
