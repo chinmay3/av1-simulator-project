@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transfer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="pipeline">
+    <header class="pipeline-header">
+      <a class="back-link" href="{{ url_for('compress_page') }}">← Back to Compression</a>
+      <div>
+        <h1>Transfer to User</h1>
+        <p>Sending AV1S over the network.</p>
+      </div>
+    </header>
+
+    <main class="pipeline-main">
+      <section class="stage transfer-stage">
+        <div class="panel network focus">
+          <h3>AV1S Payload</h3>
+          <p>Compressed stream</p>
+          <div class="file-chip av1s ready">
+            <span>output.av1s</span>
+            <em>{{ av1s_size }}</em>
+          </div>
+          <button class="action" id="sendBtn">Send to User</button>
+          <div class="packet move" id="packet">AV1S</div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const sendBtn = document.getElementById("sendBtn");
+      const packet = document.getElementById("packet");
+      sendBtn.addEventListener("click", () => {
+        packet.classList.add("fly");
+        sendBtn.disabled = true;
+        setTimeout(() => {
+          window.location.href = "{{ url_for('decode_page') }}";
+        }, 1600);
+      });
+    </script>
+  </body>
+</html>

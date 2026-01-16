@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflix DB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="pipeline">
+    <header class="pipeline-header">
+      <a class="back-link" href="{{ url_for('landing') }}">← Back to Netflix</a>
+      <div>
+        <h1>Netflix Database</h1>
+        <p>Raw YUV assets stored in the vault.</p>
+      </div>
+    </header>
+
+    <main class="pipeline-main">
+      <section class="stage db-stage">
+        <div class="vault">
+          <div class="vault-glow"></div>
+          <div class="file-chip" id="yuvFile">
+            <span>{{ yuv_name }}</span>
+            <em id="yuvSize">Loading...</em>
+          </div>
+          <p class="vault-note">Scanning storage clusters...</p>
+          <p class="vault-note subtle">
+            If the loader feels stuck near the end, please wait a moment — it will finish.
+          </p>
+          <button class="action hidden" id="compressLink">Compress</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const yuvSize = document.getElementById("yuvSize");
+      const compressLink = document.getElementById("compressLink");
+      setTimeout(() => {
+        yuvSize.textContent = "{{ yuv_size }}";
+        compressLink.classList.remove("hidden");
+        compressLink.addEventListener("click", () => {
+          window.location.href = "{{ url_for('compress_page') }}";
+        });
+      }, 5000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflix AV1SIM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="landing">
+    <header class="netflix-bar">
+      <div class="logo">NETFLIX</div>
+      <nav class="nav">
+        <span>Home</span>
+        <span>Series</span>
+        <span>Movies</span>
+        <span>My List</span>
+      </nav>
+    </header>
+
+    <main class="landing-grid">
+      <section class="hero-copy">
+        <p class="eyebrow">Netflix AV1SIM Demo</p>
+        <h1>Soccer 02: Raw to Stream</h1>
+        <p class="subhead">
+          Click the only title to watch the AV1SIM pipeline transform raw YUV into playback.
+        </p>
+      </section>
+
+      <a class="show-tile" href="{{ url_for('db') }}">
+        <div class="thumb" style="background-image: url('{{ url_for('static', filename='thumbnail.png') }}');">
+          <div class="thumb-overlay"></div>
+          <div class="thumb-title">
+            <span>SOCCER</span>
+            <strong>352x288</strong>
+          </div>
+        </div>
+        <div class="tile-meta">
+          <h2>Soccer 02: The Raw Cut</h2>
+          <p>Click to run the pipeline</p>
+        </div>
+      </a>
+    </main>
+  </body>
+</html>

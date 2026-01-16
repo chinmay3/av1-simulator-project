@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+*.mp4
+*.yuv
+*.av1s
+*.json
+ops/
+tmp_qp_*.av1s
+output.av1s
+decoded.mp4
+input.mp4
+input.yuv
+grain.json

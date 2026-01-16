@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compressing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Unbounded:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="pipeline">
+    <header class="pipeline-header">
+      <a class="back-link" href="{{ url_for('db') }}">← Back to DB</a>
+      <div>
+        <h1>Compressing to AV1S</h1>
+        <p>Running encoder (Parts 1–8)</p>
+      </div>
+    </header>
+
+    <main class="pipeline-main">
+      <section class="stage compress-stage">
+        <div class="panel encoder focus">
+          <h3>Encoder</h3>
+          <p>Transform + motion + entropy coding</p>
+          <div class="progress">
+            <div class="bar" id="progressBar"></div>
+          </div>
+          <p class="progress-label" id="progressLabel">Starting...</p>
+          <p class="progress-note">
+            If the bar pauses near the end, the encoder is still finishing up — please wait.
+          </p>
+          <div class="file-chip av1s ready hidden" id="av1sFile">
+            <span>output.av1s</span>
+            <em id="av1sSize">--</em>
+          </div>
+          <button class="action hidden" id="nextBtn">Continue</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='pipeline.js') }}"></script>
+    <script>
+      window.pipelineStart("compress");
+    </script>
+  </body>
+</html>
